@@ -23,13 +23,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            url 'https://jitpack.io'
-            content {
-                groups.jitpack.regex.each { includeGroupByRegex it }
-                groups.jitpack.group.each { includeGroup it }
-            }
-        }
         google {
             content {
                 groups.google.regex.each { includeGroupByRegex it }
@@ -47,6 +40,13 @@ allprojects {
             content {
                 groups.jcenter.regex.each { includeGroupByRegex it }
                 groups.jcenter.group.each { includeGroup it }
+            }
+        }
+        maven {
+            url 'https://jitpack.io'
+            content {
+                groups.jitpack.regex.each { includeGroupByRegex it }
+                groups.jitpack.group.each { includeGroup it }
             }
         }
     }
