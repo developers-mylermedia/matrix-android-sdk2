@@ -13,9 +13,10 @@ if (project.hasProperty("coverage")) {
 buildscript {
     repositories {
         // Do not use `mavenCentral()`, it prevents Dependabot from working properly
-        maven {
-            url 'https://repo1.maven.org/maven2'
-        }
+//        maven {
+//            url 'https://repo1.maven.org/maven2'
+//        }
+        mavenCentral()
     }
     dependencies {
         classpath "io.realm:realm-gradle-plugin:10.11.1"

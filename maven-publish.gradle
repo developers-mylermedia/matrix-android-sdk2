@@ -11,10 +11,10 @@ mavenProperties.load(new FileInputStream(mavenPropertiesFile))
 publishing {
     publications {
         myPublish(MavenPublication) {
-            groupId "nl.mylermedia.matrix-sdk"
-            artifactId "matrix"
+            groupId "org.matrix.android"
+            artifactId "matrix-android-sdk2"
             version maven_version
-            artifact "$buildDir/outputs/aar/app-release.aar"
+            artifact "$buildDir/outputs/aar/matrix-sdk-android-release.aar"
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
                 configurations.getByName("releaseCompileClasspath").getResolvedConfiguration().getFirstLevelModuleDependencies().each {
