@@ -11,7 +11,7 @@ mavenProperties.load(new FileInputStream(mavenPropertiesFile))
 publishing {
     publications {
         myPublish(MavenPublication) {
-            groupId "org.matrix.android"
+            groupId "nl.mylermedia.matrix-android"
             artifactId "matrix-android-sdk2"
             version maven_version
             artifact "$buildDir/outputs/aar/matrix-sdk-android-release.aar"
