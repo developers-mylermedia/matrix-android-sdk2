@@ -13,10 +13,9 @@ if (project.hasProperty("coverage")) {
 buildscript {
     repositories {
         // Do not use `mavenCentral()`, it prevents Dependabot from working properly
-//        maven {
-//            url 'https://repo1.maven.org/maven2'
-//        }
-        mavenCentral()
+        maven {
+            url 'https://repo1.maven.org/maven2'
+        }
     }
     dependencies {
         classpath "io.realm:realm-gradle-plugin:10.11.1"
@@ -76,11 +75,6 @@ android {
         }
     }
 
-    testOptions {
-        // Comment to run on Android 12
-//        execution 'ANDROIDX_TEST_ORCHESTRATOR'
-    }
-
     buildTypes {
         debug {
             if (project.hasProperty("coverage")) {
@@ -100,7 +94,6 @@ android {
 
     adbOptions {
         installOptions "-g"
-//        timeOutInMs 350 * 1000
     }
 
     compileOptions {
@@ -235,13 +228,3 @@ dependencies {
 
     androidTestUtil libs.androidx.orchestrator
 }
-
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            groupId = 'org.matrix.android'
-//            artifactId = 'matrix-android-sdk2'
-//            version = '1.5.33'
-//        }
-//    }
-//}
