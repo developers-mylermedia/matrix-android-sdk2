@@ -1,0 +1,42 @@
+apply plugin: 'maven-publish'
+
+// Update this version before publishing a new package to maven.
+def maven_version = "1.0.0"
+
+def homePath = ant.properties['user.home']
+def mavenPropertiesFile = new File(homePath, "ConfigurationFiles/Android/maven/maven_config.properties")
+def mavenProperties = new Properties()
+mavenProperties.load(new FileInputStream(mavenPropertiesFile))
+
+publishing {
+    publications {
+        myPublish(MavenPublication) {
+            groupId "nl.mylermedia.matrix-sdk"
+            artifactId "matrix"
+            version maven_version
+            artifact "$buildDir/outputs/aar/app-release.aar"
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.getByName("releaseCompileClasspath").getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+                    dependency.appendNode('version', it.moduleVersion)
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "https://gitlab.com/api/v4/projects/40913920/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                name = "Deploy-Token"
+                value = "${mavenProperties.getProperty("deployToken")}"
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
+}

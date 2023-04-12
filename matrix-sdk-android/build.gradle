@@ -4,9 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'realm-android'
 apply plugin: "org.jetbrains.dokka"
-apply plugin: 'maven-publish'
-// WARNING: always restore this line after importing code from Element Android (1/2)
-//apply plugin: "com.vanniktech.maven.publish"
+
 
 if (project.hasProperty("coverage")) {
     apply plugin: 'jacoco'
@@ -130,6 +128,8 @@ android {
     }
 }
 
+apply from: "$rootDir/maven-publish.gradle"
+
 static def gitRevision() {
     def cmd = "git rev-parse --short=8 HEAD"
     return cmd.execute().text.trim()
@@ -235,12 +235,12 @@ dependencies {
     androidTestUtil libs.androidx.orchestrator
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'org.matrix.android'
-            artifactId = 'matrix-android-sdk2'
-            version = '1.5.33'
-        }
-    }
-}
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            groupId = 'org.matrix.android'
+//            artifactId = 'matrix-android-sdk2'
+//            version = '1.5.33'
+//        }
+//    }
+//}

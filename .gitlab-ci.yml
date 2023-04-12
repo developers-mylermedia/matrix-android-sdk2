@@ -1,0 +1,17 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  LC_ALL: "en_US.UTF-8"
+  LANG: "en_US.UTF-8"
+
+job-production:
+  only:
+    - production
+  stage: deploy
+  script:
+    - ./gradlew build
+    - ./gradlew publish
+  tags:
+    - Android
