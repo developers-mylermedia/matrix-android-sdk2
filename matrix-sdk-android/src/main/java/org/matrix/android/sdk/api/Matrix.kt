@@ -37,6 +37,8 @@ import org.matrix.android.sdk.api.settings.LightweightSettingsStorage
 import org.matrix.android.sdk.internal.SessionManager
 import org.matrix.android.sdk.internal.di.DaggerMatrixComponent
 import org.matrix.android.sdk.internal.network.ApiInterceptor
+import org.matrix.android.sdk.internal.network.GlobalErrorHandler
+import org.matrix.android.sdk.internal.network.GlobalErrorHandlerMatrix
 import org.matrix.android.sdk.internal.network.UserAgentHolder
 import org.matrix.android.sdk.internal.util.BackgroundDetectionObserver
 import org.matrix.android.sdk.internal.worker.MatrixWorkerFactory
@@ -53,7 +55,7 @@ import javax.inject.Inject
  * @param context the application context
  * @param matrixConfiguration global configuration that will be used for every [org.matrix.android.sdk.api.session.Session]
  */
-class Matrix(context: Context, matrixConfiguration: MatrixConfiguration) {
+class Matrix(context: Context, matrixConfiguration: MatrixConfiguration, globalErrorListener: GlobalErrorHandlerMatrix.Listener) {
 
     @Inject internal lateinit var legacySessionImporter: LegacySessionImporter
     @Inject internal lateinit var authenticationService: AuthenticationService
@@ -68,6 +70,7 @@ class Matrix(context: Context, matrixConfiguration: MatrixConfiguration) {
     @Inject internal lateinit var matrixWorkerFactory: MatrixWorkerFactory
     @Inject internal lateinit var lightweightSettingsStorage: LightweightSettingsStorage
     @Inject internal lateinit var secureStorageService: SecureStorageService
+    @Inject internal lateinit var globalErrorHandlerMatrix: GlobalErrorHandlerMatrix
 
     private val uiHandler = Handler(Looper.getMainLooper())
 
@@ -85,6 +88,7 @@ class Matrix(context: Context, matrixConfiguration: MatrixConfiguration) {
         uiHandler.post {
             ProcessLifecycleOwner.get().lifecycle.addObserver(backgroundDetectionObserver)
         }
+        globalErrorHandlerMatrix.listener = globalErrorListener
     }
 
     /**

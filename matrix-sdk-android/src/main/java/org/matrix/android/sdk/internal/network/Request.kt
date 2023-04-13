@@ -92,7 +92,8 @@ internal suspend inline fun <DATA> executeRequest(
                 delay(currentDelay)
                 currentDelay = currentDelay.times(2L).coerceAtMost(maxDelayBeforeRetry)
                 // Try again (loop)
-//            } else {
+            } else {
+
 //                throw when (exception) {
 //                    is IOException -> Failure.NetworkConnection(exception)
 //                    is Failure.ServerError,

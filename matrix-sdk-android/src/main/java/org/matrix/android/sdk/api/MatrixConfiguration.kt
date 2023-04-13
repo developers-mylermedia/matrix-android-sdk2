@@ -23,6 +23,7 @@ import org.matrix.android.sdk.api.metrics.MetricPlugin
 import org.matrix.android.sdk.api.provider.CustomEventTypesProvider
 import org.matrix.android.sdk.api.provider.MatrixItemDisplayNameFallbackProvider
 import org.matrix.android.sdk.api.provider.RoomDisplayNameFallbackProvider
+import org.matrix.android.sdk.internal.network.GlobalErrorHandlerMatrix
 import java.net.Proxy
 
 data class MatrixConfiguration(

@@ -18,6 +18,7 @@ package org.matrix.android.sdk.internal.auth.login
 
 import dagger.Lazy
 import okhttp3.OkHttpClient
+import org.matrix.android.sdk.api.Matrix
 import org.matrix.android.sdk.api.auth.LoginType
 import org.matrix.android.sdk.api.auth.data.HomeServerConnectionConfig
 import org.matrix.android.sdk.api.failure.Failure
@@ -26,6 +27,7 @@ import org.matrix.android.sdk.internal.auth.AuthAPI
 import org.matrix.android.sdk.internal.auth.SessionCreator
 import org.matrix.android.sdk.internal.auth.data.PasswordLoginParams
 import org.matrix.android.sdk.internal.di.Unauthenticated
+import org.matrix.android.sdk.internal.network.GlobalErrorHandlerMatrix
 import org.matrix.android.sdk.internal.network.GlobalErrorReceiver
 import org.matrix.android.sdk.internal.network.RetrofitFactory
 import org.matrix.android.sdk.internal.network.executeRequest
@@ -49,7 +51,7 @@ internal class DefaultDirectLoginTask @Inject constructor(
         private val okHttpClient: Lazy<OkHttpClient>,
         private val retrofitFactory: RetrofitFactory,
         private val sessionCreator: SessionCreator,
-        private val globalErrorReceiver: GlobalErrorReceiver
+        private val globalErrorHandlerMatrix: GlobalErrorHandlerMatrix
 ) : DirectLoginTask {
 
     override suspend fun execute(params: DirectLoginTask.Params): Session {
@@ -67,7 +69,7 @@ internal class DefaultDirectLoginTask @Inject constructor(
         )
 
         val credentials = try {
-            executeRequest(globalErrorReceiver) {
+            executeRequest(globalErrorHandlerMatrix) {
                 authAPI.login(loginParams)
             }
         } catch (throwable: Throwable) {
