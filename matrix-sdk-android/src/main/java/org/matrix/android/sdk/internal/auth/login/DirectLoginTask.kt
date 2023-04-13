@@ -26,6 +26,7 @@ import org.matrix.android.sdk.internal.auth.AuthAPI
 import org.matrix.android.sdk.internal.auth.SessionCreator
 import org.matrix.android.sdk.internal.auth.data.PasswordLoginParams
 import org.matrix.android.sdk.internal.di.Unauthenticated
+import org.matrix.android.sdk.internal.network.GlobalErrorReceiver
 import org.matrix.android.sdk.internal.network.RetrofitFactory
 import org.matrix.android.sdk.internal.network.executeRequest
 import org.matrix.android.sdk.internal.network.httpclient.addSocketFactory
@@ -47,7 +48,8 @@ internal class DefaultDirectLoginTask @Inject constructor(
         @Unauthenticated
         private val okHttpClient: Lazy<OkHttpClient>,
         private val retrofitFactory: RetrofitFactory,
-        private val sessionCreator: SessionCreator
+        private val sessionCreator: SessionCreator,
+        private val globalErrorReceiver: GlobalErrorReceiver
 ) : DirectLoginTask {
 
     override suspend fun execute(params: DirectLoginTask.Params): Session {
@@ -65,7 +67,7 @@ internal class DefaultDirectLoginTask @Inject constructor(
         )
 
         val credentials = try {
-            executeRequest(null) {
+            executeRequest(globalErrorReceiver) {
                 authAPI.login(loginParams)
             }
         } catch (throwable: Throwable) {

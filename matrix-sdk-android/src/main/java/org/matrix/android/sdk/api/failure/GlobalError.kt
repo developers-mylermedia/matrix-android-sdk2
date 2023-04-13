@@ -16,6 +16,7 @@
 
 package org.matrix.android.sdk.api.failure
 
+import android.provider.Settings.Global
 import org.matrix.android.sdk.api.network.ssl.Fingerprint
 
 // This class will be sent to the bus
@@ -24,9 +25,11 @@ sealed class GlobalError {
     data class ConsentNotGivenError(val consentUri: String) : GlobalError()
     data class CertificateError(val fingerprint: Fingerprint) : GlobalError()
 
+
     /**
      * The SDK requires the app (which should request the user) to perform an initial sync.
      */
     data class InitialSyncRequest(val reason: InitialSyncRequestReason) : GlobalError()
     object ExpiredAccount : GlobalError()
+    object InvalidUsernameOrPassword: GlobalError()
 }

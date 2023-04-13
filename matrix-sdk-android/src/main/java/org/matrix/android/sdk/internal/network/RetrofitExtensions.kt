@@ -98,6 +98,9 @@ private fun toFailure(errorBody: ResponseBody?, httpCode: Int, globalErrorReceiv
                 matrixError.code == MatrixError.ORG_MATRIX_EXPIRED_ACCOUNT -> {
                     globalErrorReceiver?.handleGlobalError(GlobalError.ExpiredAccount)
                 }
+                matrixError.code == MatrixError.M_FORBIDDEN -> {
+                    globalErrorReceiver?.handleGlobalError(GlobalError.InvalidUsernameOrPassword)
+                }
             }
 
             return Failure.ServerError(matrixError, httpCode)
