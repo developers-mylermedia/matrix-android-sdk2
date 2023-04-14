@@ -93,7 +93,13 @@ internal suspend inline fun <DATA> executeRequest(
                 currentDelay = currentDelay.times(2L).coerceAtMost(maxDelayBeforeRetry)
                 // Try again (loop)
             } else {
+                if (request == null) {
+                    Timber.e("Exception when executing request")
+                } else {
+                    Timber.e("Exception when executing request ${request.method} ${request.url.toString().substringBefore("?")}")
+                }
 
+                GlobalErrorHandlerMatrix.handleGlobalError(exception, request)
 //                throw when (exception) {
 //                    is IOException -> Failure.NetworkConnection(exception)
 //                    is Failure.ServerError,

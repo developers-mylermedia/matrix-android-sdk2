@@ -50,8 +50,7 @@ internal class DefaultDirectLoginTask @Inject constructor(
         @Unauthenticated
         private val okHttpClient: Lazy<OkHttpClient>,
         private val retrofitFactory: RetrofitFactory,
-        private val sessionCreator: SessionCreator,
-        private val globalErrorHandlerMatrix: GlobalErrorHandlerMatrix
+        private val sessionCreator: SessionCreator
 ) : DirectLoginTask {
 
     override suspend fun execute(params: DirectLoginTask.Params): Session {
@@ -69,7 +68,7 @@ internal class DefaultDirectLoginTask @Inject constructor(
         )
 
         val credentials = try {
-            executeRequest(globalErrorHandlerMatrix) {
+            executeRequest(null) {
                 authAPI.login(loginParams)
             }
         } catch (throwable: Throwable) {

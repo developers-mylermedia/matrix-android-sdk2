@@ -32,4 +32,5 @@ sealed class GlobalError {
     data class InitialSyncRequest(val reason: InitialSyncRequestReason) : GlobalError()
     object ExpiredAccount : GlobalError()
     object InvalidUsernameOrPassword: GlobalError()
+    object GenericError: GlobalError()
 }

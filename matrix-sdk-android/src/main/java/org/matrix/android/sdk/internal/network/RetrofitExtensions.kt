@@ -18,6 +18,7 @@
 
 package org.matrix.android.sdk.internal.network
 
+import android.provider.Settings.Global
 import com.squareup.moshi.JsonEncodingException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.ResponseBody
@@ -73,6 +74,45 @@ internal fun okhttp3.Response.toFailure(globalErrorReceiver: GlobalErrorReceiver
     return toFailure(body, code, globalErrorReceiver)
 }
 
+internal fun HttpException.toGlobalError(): GlobalError {
+    val errorBody = response()?.errorBody()
+    val httpCode = code()
+    val errorBodyStr = errorBody?.string()
+
+    val matrixErrorAdapter = MoshiProvider.providesMoshi().adapter(MatrixError::class.java)
+
+    try {
+        val matrixError = matrixErrorAdapter.fromJson(errorBodyStr)
+
+        if (matrixError != null) {
+            // Also send following errors to the globalErrorReceiver, for a global management
+            when {
+                matrixError.code == MatrixError.M_CONSENT_NOT_GIVEN && !matrixError.consentUri.isNullOrBlank() -> {
+                    return GlobalError.ConsentNotGivenError(matrixError.consentUri)
+                }
+                httpCode == HttpURLConnection.HTTP_UNAUTHORIZED && /* 401 */
+                        matrixError.code == MatrixError.M_UNKNOWN_TOKEN -> {
+                    return GlobalError.InvalidToken(matrixError.isSoftLogout.orFalse())
+                }
+                matrixError.code == MatrixError.ORG_MATRIX_EXPIRED_ACCOUNT -> {
+                    return GlobalError.ExpiredAccount
+                }
+                matrixError.code == MatrixError.M_FORBIDDEN -> {
+                    return GlobalError.InvalidUsernameOrPassword
+                }
+            }
+        }
+    } catch (ex: Exception) {
+        // This is not a MatrixError
+        Timber.w("The error returned by the server is not a MatrixError")
+    } catch (ex: JsonEncodingException) {
+        // This is not a MatrixError, HTML code?
+        Timber.w("The error returned by the server is not a MatrixError, probably HTML string")
+    }
+
+    return GlobalError.GenericError
+}
+
 private fun toFailure(errorBody: ResponseBody?, httpCode: Int, globalErrorReceiver: GlobalErrorReceiver?): Failure {
     if (errorBody == null) {
         return Failure.Unknown(RuntimeException("errorBody should not be null"))
@@ -115,3 +155,5 @@ private fun toFailure(errorBody: ResponseBody?, httpCode: Int, globalErrorReceiv
 
     return Failure.OtherServerError(errorBodyStr, httpCode)
 }
+
+

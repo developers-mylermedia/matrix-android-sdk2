@@ -70,7 +70,6 @@ class Matrix(context: Context, matrixConfiguration: MatrixConfiguration, globalE
     @Inject internal lateinit var matrixWorkerFactory: MatrixWorkerFactory
     @Inject internal lateinit var lightweightSettingsStorage: LightweightSettingsStorage
     @Inject internal lateinit var secureStorageService: SecureStorageService
-    @Inject internal lateinit var globalErrorHandlerMatrix: GlobalErrorHandlerMatrix
 
     private val uiHandler = Handler(Looper.getMainLooper())
 
@@ -88,7 +87,8 @@ class Matrix(context: Context, matrixConfiguration: MatrixConfiguration, globalE
         uiHandler.post {
             ProcessLifecycleOwner.get().lifecycle.addObserver(backgroundDetectionObserver)
         }
-        globalErrorHandlerMatrix.listener = globalErrorListener
+
+        GlobalErrorHandlerMatrix.listener = globalErrorListener
     }
 
     /**

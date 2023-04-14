@@ -101,7 +101,4 @@ internal abstract class AuthModule {
 
     @Binds
     abstract fun bindQrLoginTokenTask(task: DefaultQrLoginTokenTask): QrLoginTokenTask
-
-    @Binds
-    abstract fun bindGlobalErrorReceiver(handler: GlobalErrorHandlerMatrix): GlobalErrorReceiver
 }
