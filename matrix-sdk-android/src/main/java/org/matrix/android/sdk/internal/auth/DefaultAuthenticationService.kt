@@ -400,6 +400,7 @@ internal class DefaultAuthenticationService @Inject constructor(
             .withHomeServerUri("https://dummy.org")
             .build()
 
+    @kotlin.jvm.Throws
     override suspend fun directAuthentication(
             homeServerConnectionConfig: HomeServerConnectionConfig,
             matrixId: String,

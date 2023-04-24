@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 
 // Update this version before publishing a new package to maven.
-def maven_version = "1.0.5"
+def maven_version = "1.0.6"
 
 def homePath = ant.properties['user.home']
 def mavenPropertiesFile = new File(homePath, "ConfigurationFiles/Android/maven/maven_config.properties")

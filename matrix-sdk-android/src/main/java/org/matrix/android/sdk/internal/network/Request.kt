@@ -100,13 +100,13 @@ internal suspend inline fun <DATA> executeRequest(
                 }
 
                 GlobalErrorHandlerMatrix.handleGlobalError(exception, request)
-//                throw when (exception) {
-//                    is IOException -> Failure.NetworkConnection(exception)
-//                    is Failure.ServerError,
-//                    is Failure.OtherServerError,
-//                    is CancellationException -> exception
-//                    else -> Failure.Unknown(exception)
-//                }
+                throw when (exception) {
+                    is IOException -> Failure.NetworkConnection(exception)
+                    is Failure.ServerError,
+                    is Failure.OtherServerError,
+                    is CancellationException -> exception
+                    else -> Failure.Unknown(exception)
+                }
             }
         }
     }
