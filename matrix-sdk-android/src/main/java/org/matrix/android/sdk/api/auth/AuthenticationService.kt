@@ -123,7 +123,7 @@ interface AuthenticationService {
             password: String,
             initialDeviceName: String,
             deviceId: String? = null
-    ): Session
+    ): Session?
 
     /**
      * Authenticate using m.login.token method during sign in with QR code.

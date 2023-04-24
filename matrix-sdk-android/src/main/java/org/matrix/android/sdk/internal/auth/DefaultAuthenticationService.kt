@@ -407,15 +407,24 @@ internal class DefaultAuthenticationService @Inject constructor(
             password: String,
             initialDeviceName: String,
             deviceId: String?
-    ): Session {
-        return directLoginTask.execute(
+    ): Session? {
+        return runCatching {
+            directLoginTask.execute(
                 DirectLoginTask.Params(
-                        homeServerConnectionConfig = homeServerConnectionConfig,
-                        userId = matrixId,
-                        password = password,
-                        deviceName = initialDeviceName,
-                        deviceId = deviceId
+                    homeServerConnectionConfig = homeServerConnectionConfig,
+                    userId = matrixId,
+                    password = password,
+                    deviceName = initialDeviceName,
+                    deviceId = deviceId
                 )
+            )
+        }.fold(
+            onSuccess = {
+                it
+            },
+            onFailure = {
+                null
+            }
         )
     }
 

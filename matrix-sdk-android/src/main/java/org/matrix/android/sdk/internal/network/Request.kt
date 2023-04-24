@@ -40,6 +40,7 @@ import java.io.IOException
  * @param maxRetriesCount the max number of retries
  * @param requestBlock a suspend lambda to perform the network request
  */
+@kotlin.jvm.Throws
 internal suspend inline fun <DATA> executeRequest(
         globalErrorReceiver: GlobalErrorReceiver?,
         canRetry: Boolean = false,
