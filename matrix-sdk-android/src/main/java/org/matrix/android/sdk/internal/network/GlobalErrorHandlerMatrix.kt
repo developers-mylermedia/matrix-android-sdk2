@@ -22,7 +22,10 @@ object GlobalErrorHandlerMatrix {
     private fun throwableToGlobalError(throwable: Throwable): GlobalError {
         return when (throwable) {
             is HttpException -> throwable.toGlobalError()
-            else -> GlobalError.GenericError
+            else -> GlobalError.GenericError(
+                throwable.message,
+                throwable.cause
+            )
         }
     }
 

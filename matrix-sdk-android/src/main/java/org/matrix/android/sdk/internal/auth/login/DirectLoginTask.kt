@@ -53,7 +53,6 @@ internal class DefaultDirectLoginTask @Inject constructor(
         private val sessionCreator: SessionCreator
 ) : DirectLoginTask {
 
-    @kotlin.jvm.Throws
     override suspend fun execute(params: DirectLoginTask.Params): Session {
         val client = buildClient(params.homeServerConnectionConfig)
         val homeServerUrl = params.homeServerConnectionConfig.homeServerUriBase.toString()

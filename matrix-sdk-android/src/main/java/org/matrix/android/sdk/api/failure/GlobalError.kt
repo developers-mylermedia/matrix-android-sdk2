@@ -24,6 +24,7 @@ sealed class GlobalError {
     data class InvalidToken(val softLogout: Boolean) : GlobalError()
     data class ConsentNotGivenError(val consentUri: String) : GlobalError()
     data class CertificateError(val fingerprint: Fingerprint) : GlobalError()
+    data class GenericError(val message: String?, val cause: Throwable?): GlobalError()
 
 
     /**
@@ -32,5 +33,5 @@ sealed class GlobalError {
     data class InitialSyncRequest(val reason: InitialSyncRequestReason) : GlobalError()
     object ExpiredAccount : GlobalError()
     object InvalidUsernameOrPassword: GlobalError()
-    object GenericError: GlobalError()
+
 }

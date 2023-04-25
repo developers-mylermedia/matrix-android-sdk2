@@ -110,7 +110,7 @@ internal fun HttpException.toGlobalError(): GlobalError {
         Timber.w("The error returned by the server is not a MatrixError, probably HTML string")
     }
 
-    return GlobalError.GenericError
+    return GlobalError.GenericError("Unknown HTTP Error: $errorBodyStr", Throwable())
 }
 
 private fun toFailure(errorBody: ResponseBody?, httpCode: Int, globalErrorReceiver: GlobalErrorReceiver?): Failure {

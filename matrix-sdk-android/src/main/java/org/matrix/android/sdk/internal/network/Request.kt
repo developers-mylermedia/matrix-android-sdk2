@@ -18,6 +18,7 @@ package org.matrix.android.sdk.internal.network
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.yield
 import org.matrix.android.sdk.api.failure.Failure
 import org.matrix.android.sdk.api.failure.GlobalError
 import org.matrix.android.sdk.api.failure.getRetryDelay
@@ -27,6 +28,7 @@ import org.matrix.android.sdk.internal.network.ssl.CertUtil
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import java.net.UnknownHostException
 
 /**
  * Execute a request from the requestBlock and handle some of the Exception it could generate
@@ -40,7 +42,6 @@ import java.io.IOException
  * @param maxRetriesCount the max number of retries
  * @param requestBlock a suspend lambda to perform the network request
  */
-@kotlin.jvm.Throws
 internal suspend inline fun <DATA> executeRequest(
         globalErrorReceiver: GlobalErrorReceiver?,
         canRetry: Boolean = false,
@@ -76,7 +77,10 @@ internal suspend inline fun <DATA> executeRequest(
                     //    // Send the error to the bus, for a global management
                     //    eventBus?.post(GlobalError.CertificateError(unrecognizedCertificateException))
                     // }
-                    ?.also { unrecognizedCertificateException -> throw unrecognizedCertificateException }
+                    ?.also { unrecognizedCertificateException ->
+                        GlobalErrorHandlerMatrix.handleGlobalError(exception, request)
+                        throw unrecognizedCertificateException
+                    }
 
             currentRetryCount++
 
@@ -86,6 +90,7 @@ internal suspend inline fun <DATA> executeRequest(
                 if (retryDelay <= maxDelayBeforeRetry) {
                     delay(retryDelay)
                 } else {
+                    GlobalErrorHandlerMatrix.handleGlobalError(exception, request)
                     // delay is too high to be retried, propagate the exception
                     throw exception
                 }
@@ -99,8 +104,9 @@ internal suspend inline fun <DATA> executeRequest(
                 } else {
                     Timber.e("Exception when executing request ${request.method} ${request.url.toString().substringBefore("?")}")
                 }
-
+                
                 GlobalErrorHandlerMatrix.handleGlobalError(exception, request)
+
                 throw when (exception) {
                     is IOException -> Failure.NetworkConnection(exception)
                     is Failure.ServerError,

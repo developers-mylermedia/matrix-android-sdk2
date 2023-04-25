@@ -139,11 +139,16 @@ internal class DefaultPushersService @Inject constructor(
     }
 
     override suspend fun removePusher(pusher: Pusher) {
-        removePusher(pusher.pushKey, pusher.appId)
+            removePusher(pusher.pushKey, pusher.appId)
     }
 
-    override suspend fun removeHttpPusher(pushkey: String, appId: String) {
-        removePusher(pushkey, appId)
+    override suspend fun removeHttpPusher(pushkey: String, appId: String): Boolean {
+        return runCatching {
+            removePusher(pushkey, appId)
+        }.fold(
+            onSuccess = {true},
+            onFailure = {false}
+        )
     }
 
     override suspend fun removeEmailPusher(email: String) {

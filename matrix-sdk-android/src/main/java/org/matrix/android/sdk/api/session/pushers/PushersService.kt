@@ -102,7 +102,7 @@ interface PushersService {
      * Remove a Http pusher by its pushkey and appId.
      * @see addHttpPusher
      */
-    suspend fun removeHttpPusher(pushkey: String, appId: String)
+    suspend fun removeHttpPusher(pushkey: String, appId: String): Boolean
 
     /**
      * Remove an Email pusher.
